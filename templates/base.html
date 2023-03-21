@@ -13,8 +13,8 @@
         {% endblock %}
         
         {% block corecss %}
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&display=swap">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato&display=swap">
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
         {% endblock %}
         
@@ -23,8 +23,8 @@
 
         {% block corejs %}
         <script src="https://kit.fontawesome.com/18e4246add.js" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
         {% endblock %}
 
@@ -82,7 +82,11 @@
                                 <div class="text-center">
                                     <div><i class="fas fa-shopping-bag fa-lg"></i></div>
                                     <p class="my-0">
-                                        {% if grand_total %} ${{ grand_total|floatformat:2 }} {% else %} $0.00 {% endif %}
+                                        {% if grand_total %}
+                                            ${{ grand_total|floatformat:2 }}
+                                        {% else %}
+                                            $0.00
+                                        {% endif %}
                                     </p>
                                 </div>
                             </a>
@@ -107,7 +111,33 @@
         </header>
 
         {% if messages %}
-        <div class="message-container"></div>
-        {% endif %} {% block page_header %} {% endblock %} {% block content %} {% endblock %} {% block postloadjs %} {% endblock %}
-    </body>
+        <div class="message-container">
+            {% for message in messages %}
+                {% with message.level as level %}
+                    {% if level == 40 %}
+                        {% include 'includes/toasts/toast_error.html' %}
+                    {% elif level == 30 %}
+                        {% include 'includes/toasts/toast_warning.html' %}
+                    {% elif level == 25 %}
+                        {% include 'includes/toasts/toast_success.html' %}
+                    {% else %}
+                        {% include 'includes/toasts/toast_info.html' %}
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+        </div>
+    {% endif %}
+        
+    {% block page_header %}
+    {% endblock %}
+        
+    {% block content %}
+    {% endblock %}
+        
+    {% block postloadjs %}
+    <script type="text/javascript">
+        $('.toast').toast('show');
+    </script>
+    {% endblock %}
+</body>
 </html>
